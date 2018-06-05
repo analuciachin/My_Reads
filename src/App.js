@@ -82,7 +82,7 @@ class BooksApp extends React.Component {
   }
 
 
-  removeReading = (book, from, to) => {
+  removeReading = (book) => {
     console.log(book);  
     this.setState((state) => ({
       reading: state.reading.filter(b => book.id !== b.id )
@@ -92,9 +92,9 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
-        <ListBooks onDeleteReading={this.removeReading} books={this.state.reading} currentShelf="reading" />
-        <ListBooks books={this.state.wantToRead} />
-        <ListBooks books={this.state.read} />
+        <ListBooks onDeleteReading={this.removeReading} books={this.state.reading} currentShelf="Reading" />
+        <ListBooks books={this.state.wantToRead} currentShelf="Want to Read"/>
+        <ListBooks books={this.state.read} currentShelf="Read"/>
       </div>
     )
   }

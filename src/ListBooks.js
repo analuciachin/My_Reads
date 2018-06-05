@@ -13,7 +13,7 @@ class ListBooks extends Component {
 				<div className="list-books-content">
 					<div className="bookshelf">
                   		
-					{/*<h2 className="bookshelf-title">{this.props.books[0].shelf}</h2>*/}
+					<h2 className="bookshelf-title">{this.props.currentShelf}</h2>
 						<div className="bookshelf-books">
 							<ol className='books-grid'>
 								<li>
