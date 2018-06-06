@@ -84,13 +84,23 @@ class BooksApp extends React.Component {
 
   removeReading = (book, from) => {
     //console.log(from);
-    let selectedShelf = document.getElementById('selectedShelf').value;
-    console.log(selectedShelf);       
-    this.setState((state) => ({
-      reading: state.reading.filter(b => book.id !== b.id ),
-      wantToRead: state.wantToRead.concat(book)
-      //selectedShelf: state.selectedShelf.push(book.id)
-    }))
+    //let selectedShelf = document.getElementById('selectedShelf').value;
+    //console.log(selectedShelf);       
+    this.setState((state) => {
+      let shelfTo = document.getElementById('selectedShelf').value;
+      console.log(shelfTo);  
+      let updatedState = {};
+      updatedState.reading = state.reading.filter(b => book.id !== b.id);
+      updatedState[shelfTo] = state[shelfTo].concat(book); 
+      console.log(shelfTo);
+
+      return updatedState; //{ 
+        
+        //reading: state.reading.filter(b => book.id !== b.id),
+        //wantToRead: state.wantToRead.concat(book)
+        //selectedShelf: state.selectedShelf.push(book.id)
+      //}
+    })
   }
 
   render() {
