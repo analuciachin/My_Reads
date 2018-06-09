@@ -86,8 +86,11 @@ class BooksApp extends React.Component {
     this.setState((state) => {
       let shelfFrom = book.shelf;
       console.log(shelfFrom);
-      let shelfTo = document.getElementById('selectedShelf').value;  
+      
+      let selectedShelf = document.getElementById('book'+ book.id);
+      let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
       console.log(shelfTo);
+      //console.log(shelfTo);
       let updatedState = {};
       updatedState[shelfFrom] = state[shelfFrom].filter(b => book.id !== b.id);
       updatedState[shelfTo] = state[shelfTo].concat(book); 
@@ -105,7 +108,7 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
-        <ListBooks onChangeShelves={this.changeShelves} books={this.state.currentlyReading} currentShelf="Currently Reading" />
+        <ListBooks onChangeShelves={this.changeShelves} books={this.state.currentlyReading} currentShelf="Currently Reading"/>
         <ListBooks onChangeShelves={this.changeShelves} books={this.state.wantToRead} currentShelf="Want to Read"/>
         <ListBooks onChangeShelves={this.changeShelves} books={this.state.read} currentShelf="Read"/>
       </div>

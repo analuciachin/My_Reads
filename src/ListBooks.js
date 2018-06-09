@@ -24,12 +24,12 @@ class ListBooks extends Component {
 												backgroundImage: `url(${book.coverURL})`, width: 128, height: 193}}>
 											</div> {/*div book-cover*/}
 											<div className='book-shelf-changer'>
-                              					<select id='selectedShelf' onChange={() => this.props.onChangeShelves(book)}>
-		                                			<option value='none' disabled>Move to...</option>
-		                                			{/*<option value='currentlyReading'>Currently Reading</option>*/}
+                              					<select id={'book' + book.id} onChange={() => this.props.onChangeShelves(book)}>
+		                                			<option value='none'>Move to...</option>		                                			
+		                                			<option value='currentlyReading'>Currently Reading</option>
 		                                			<option value='wantToRead'>Want to Read</option>
 		                                			<option value='read'>Read</option>
-		                                			<option value='none'>None</option>
+		                                			{/*<option value='none'>None</option>*/}
 		                            			</select>
                             				</div> {/*div book-shelf-changer*/}
 										</div> {/*book-top*/}
