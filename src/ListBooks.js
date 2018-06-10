@@ -13,7 +13,7 @@ class ListBooks extends Component {
 				<div className="list-books-content">
 					<div className="bookshelf">
                   		
-					<h2 className="bookshelf-title">{this.props.currentShelf}</h2>
+					<h2 className="bookshelf-title">{this.props.currentShelfTitle}</h2>
 						<div className="bookshelf-books">
 							<ol className='books-grid'>
 								<li>
@@ -24,7 +24,7 @@ class ListBooks extends Component {
 												backgroundImage: `url(${book.coverURL})`, width: 128, height: 193}}>
 											</div> {/*div book-cover*/}
 											<div className='book-shelf-changer'>
-                              					<select id={'book' + book.id} onChange={() => this.props.onChangeShelves(book)}>
+                              					<select id={'book' + book.id} onClick={() => this.props.onDisable(book, this.props.currentShelf)} onChange={() => this.props.onChangeShelves(book, this.props.currentShelf)}>
 		                                			<option value='none'>Move to...</option>		                                			
 		                                			<option value='currentlyReading'>Currently Reading</option>
 		                                			<option value='wantToRead'>Want to Read</option>
@@ -35,7 +35,6 @@ class ListBooks extends Component {
 										</div> {/*book-top*/}
 										<div className='book-title'>{book.title}</div>
                         				<div className='book-authors'>{book.authors}</div>
-                        				<div className='book-authors'>{book.shelf}</div>
 									</div> //div book	
 								))}
 								</li>
