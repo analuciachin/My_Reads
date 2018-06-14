@@ -15,7 +15,7 @@ class ListBooks extends Component {
 								<div key={book.id} className='book'>
 									<div className='book-top'>
 										<div className='book-cover' style={{
-											backgroundImage: `url(${book.coverURL})`, width: 128, height: 193}}>
+											backgroundImage: `url(${book.imageLinks.smallThumbnail})`, width: 128, height: 193}}>
 										</div> {/*div book-cover*/}
 										<div className='book-shelf-changer'>
 	                      					<select id={'book' + book.id} onClick={() => this.props.onDisable(book, this.props.currentShelf)} onChange={() => this.props.onChangeShelves(book, this.props.currentShelf)}>

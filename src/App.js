@@ -1,5 +1,5 @@
 import React from 'react'
-// import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI'
 import './App.css'
 import ListBooks from './ListBooks'
 /*
@@ -22,8 +22,14 @@ const books = [
 */
 
 class BooksApp extends React.Component {
-  state = {
-    currentlyReading: [
+  state = {    
+      currentlyReading: [],
+      wantToRead: [],
+      read: []
+  }
+
+  /*state = {
+    currentlyReading: [    
       {
         "id": "0",
         "coverURL": "http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api",
@@ -65,7 +71,8 @@ class BooksApp extends React.Component {
         "authors": "Seuss",
       }
     ]
-    
+  }
+    */
     /**
      * TODO: Instead of using this state variable to keep track of which page
      * we're on, use the URL in the browser's address bar. This will ensure that
@@ -73,8 +80,29 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
     //showSearchPage: false
-  }
+  
 
+  componentDidMount() {
+    let updateStateBooks = {};
+    updateStateBooks.wantToRead = [];
+    updateStateBooks.read = [];
+
+    BooksAPI.getAll().then((books) => {
+      books.map((book) => {
+        //book.coverURL = "http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api";
+        console.log(book.shelf);
+        if(book.shelf === 'currentlyReading') {
+          updateStateBooks['currentlyReading'] = this.state['currentlyReading'].concat(book);
+        }
+
+
+      return updateStateBooks;
+      })
+      console.log(updateStateBooks);
+      this.setState( updateStateBooks );
+      console.log(books);
+    })
+  }
 
   changeShelves = (book, currentShelfValue) => {
     this.setState((state) => {
@@ -93,10 +121,8 @@ class BooksApp extends React.Component {
   }
 
   disableOptions = (book, currentShelfValue) => {
-    //console.log('teste');
     let optionSelected = document.getElementById('book'+ book.id).getElementsByTagName('option');
     for (var i=0; i<optionSelected.length; i++) {
-      //console.log(optionSelected[i].value);
       if(optionSelected[i].value === currentShelfValue) {
         optionSelected[i].disabled = true;
       }
