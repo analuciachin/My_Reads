@@ -83,24 +83,27 @@ class BooksApp extends React.Component {
   
 
   componentDidMount() {
-    let updateStateBooks = {};
-    updateStateBooks.wantToRead = [];
-    updateStateBooks.read = [];
+    let updateStateBooks = {
+      currentlyReading: [],
+      wantToRead: [],
+      read: []
+    }
 
     BooksAPI.getAll().then((books) => {
       books.map((book) => {
-        //book.coverURL = "http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api";
-        console.log(book.shelf);
         if(book.shelf === 'currentlyReading') {
-          updateStateBooks['currentlyReading'] = this.state['currentlyReading'].concat(book);
+          updateStateBooks['currentlyReading'].push(book);
         }
-
-
+        else if (book.shelf === 'wantToRead') {
+          updateStateBooks['wantToRead'].push(book);
+        }
+        else if (book.shelf === 'read') {
+          updateStateBooks['read'].push(book);
+        }
       return updateStateBooks;
       })
-      console.log(updateStateBooks);
+
       this.setState( updateStateBooks );
-      console.log(books);
     })
   }
 
