@@ -1,25 +1,11 @@
 import React from 'react'
+import { Route } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
+import MyReadsHeader from './MyReadsHeader'
 import ListBooks from './ListBooks'
-/*
-const books = [
-  {
-    "id": "1",
-    "coverURL": "http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api",
-    "title": "To Kill a Mockingbird",
-    "authors": "Harper Lee",
-    "shelf": "Currently Reading"
-  },
-  {
-    "id": "2",
-    "coverURL": "http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api", 
-    "title": "Ender's Game",
-    "authors": "Orson Scott Card",
-    "shelf": "Currently Reading" 
-  }
-]
-*/
+import SearchBooks from './SearchBooks'
+
 
 class BooksApp extends React.Component {
   state = {    
@@ -118,6 +104,8 @@ class BooksApp extends React.Component {
       updatedState[shelfFrom] = state[shelfFrom].filter(b => book.id !== b.id);
       updatedState[shelfTo] = state[shelfTo].concat(book); 
       
+      BooksAPI.update(book, shelfTo);
+
       return updatedState;
 
     })
@@ -135,9 +123,15 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
-        <ListBooks onDisable={this.disableOptions} onChangeShelves={this.changeShelves} books={this.state.currentlyReading} currentShelf="currentlyReading" currentShelfTitle="Currently Reading"/>
-        <ListBooks onDisable={this.disableOptions} onChangeShelves={this.changeShelves} books={this.state.wantToRead} currentShelf="wantToRead" currentShelfTitle="Want to Read"/>
-        <ListBooks onDisable={this.disableOptions} onChangeShelves={this.changeShelves} books={this.state.read} currentShelf="read" currentShelfTitle="Read"/>
+        <Route exact path="/" render={() => (
+          <div>  
+            <MyReadsHeader />
+            <ListBooks onDisable={this.disableOptions} onChangeShelves={this.changeShelves} books={this.state.currentlyReading} currentShelf="currentlyReading" currentShelfTitle="Currently Reading" />
+            <ListBooks onDisable={this.disableOptions} onChangeShelves={this.changeShelves} books={this.state.wantToRead} currentShelf="wantToRead" currentShelfTitle="Want to Read" />
+            <ListBooks onDisable={this.disableOptions} onChangeShelves={this.changeShelves} books={this.state.read} currentShelf="read" currentShelfTitle="Read" />
+          </div>
+        )} />
+        <Route path="/search" component={ SearchBooks } />
       </div>
     )
   }
