@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+//import { Link } from 'react-router-dom'
 
 class ListBooks extends Component {
  
@@ -23,7 +23,7 @@ class ListBooks extends Component {
 	                                			<option value='currentlyReading'>Currently Reading</option>
 	                                			<option value='wantToRead'>Want to Read</option>
 	                                			<option value='read'>Read</option>
-	                                			{/*<option value='none'>None</option>*/}
+	                                			<option value='none'>None</option>
 	                            			</select>
 	                    				</div> {/*div book-shelf-changer*/}
 									</div> {/*book-top*/}

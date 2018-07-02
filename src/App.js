@@ -11,7 +11,8 @@ class BooksApp extends React.Component {
   state = {    
       currentlyReading: [],
       wantToRead: [],
-      read: []
+      read: [],
+      none: []
   }
 
   /*state = {
@@ -72,10 +73,12 @@ class BooksApp extends React.Component {
     let updateStateBooks = {
       currentlyReading: [],
       wantToRead: [],
-      read: []
+      read: [],
+      none: []
     }
 
     BooksAPI.getAll().then((books) => {
+      console.log(books);
       books.map((book) => {
         if(book.shelf === 'currentlyReading') {
           updateStateBooks['currentlyReading'].push(book);
@@ -131,7 +134,13 @@ class BooksApp extends React.Component {
             <ListBooks onDisable={this.disableOptions} onChangeShelves={this.changeShelves} books={this.state.read} currentShelf="read" currentShelfTitle="Read" />
           </div>
         )} />
-        <Route path="/search" component={ SearchBooks } />
+        
+        <Route path="/search" render={() => (
+          <div>
+            <SearchBooks />
+          </div>
+        )} />
+
       </div>
     )
   }
