@@ -22,6 +22,28 @@ class SearchBooks extends Component {
 	}
 
 
+  	changeShelves = (book, currentShelfValue) => {
+    	this.setState((state) => {
+      		//let shelfFrom = currentShelfValue;
+      
+      		let selectedShelf = document.getElementById('book'+ book.id);
+      		let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
+
+      		//let updatedState = {};
+      		//updatedState[shelfFrom] = state[shelfFrom].filter(b => book.id !== b.id);
+      		//updatedState[shelfTo] = state[shelfTo].concat(book); 
+      
+      		BooksAPI.update(book, shelfTo);
+      		console.log(book)
+      		//return updatedState;
+    	})
+  	}
+
+  	disableOptions = (book) => {
+  		console.log("teste")
+  	}
+
+
 	render() {
 
 		{/*
@@ -50,7 +72,7 @@ class SearchBooks extends Component {
             		<div className="search-books-results">              			
             		</div>
           		</div>
-				<ListBooks books={this.state.none} />
+				<ListBooks onDisable={this.disableOptions} onChangeShelves={this.changeShelves} books={this.state.none} currentShelf="none" />
 			</div>
 
 		)
