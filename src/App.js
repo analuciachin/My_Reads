@@ -78,7 +78,6 @@ class BooksApp extends React.Component {
     }
 
     BooksAPI.getAll().then((books) => {
-      console.log(books);
       books.map((book) => {
         if(book.shelf === 'currentlyReading') {
           updateStateBooks['currentlyReading'].push(book);

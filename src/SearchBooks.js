@@ -17,7 +17,7 @@ class SearchBooks extends Component {
 	updateQuery = (query) => {
 		this.setState({ query: query.trim() })
 		if (this.state.query) {
-			BooksAPI.search(this.state.query).then((books) => { this.setState( {none: books} ); console.log(books) })
+			BooksAPI.search(this.state.query).then((books) => { this.setState( {none: books} ) })
 		}
 	}
 
@@ -34,13 +34,38 @@ class SearchBooks extends Component {
       		//updatedState[shelfTo] = state[shelfTo].concat(book); 
       
       		BooksAPI.update(book, shelfTo);
-      		console.log(book)
+      		//console.log(book)
       		//return updatedState;
     	})
   	}
 
   	disableOptions = (book) => {
-  		console.log("teste")
+  		let bookTitle = [];
+  		let bookShelf = [];
+  		let optionSelected = document.getElementById('book'+ book.id).getElementsByTagName('option');
+  		
+  		BooksAPI.getAll().then((books) => { 
+  			books.map((book) => {
+  				bookTitle.push(book.title);
+  				bookShelf.push(book.shelf)
+  			})
+  		})
+  		BooksAPI.search(this.state.query).then((books) => { 
+  			books.map((book) => {
+  				for(var i=0; i<bookTitle.length; i++) {
+  					console.log(book.title);
+  					console.log(bookTitle[i]);
+  					console.log(bookTitle);
+  					if(book.title === bookTitle[i]) {
+  						for (var j=0; j<optionSelected.length; j++) {
+  							if(optionSelected[j].value === bookShelf[i]) {
+        						optionSelected[j].disabled = true;
+      						}
+  						}
+  					}
+  				}	
+  			})
+  		})
   	}
 
 
