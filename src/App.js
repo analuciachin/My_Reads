@@ -81,7 +81,6 @@ class BooksApp extends React.Component {
       books.map((book) => {
         if(book.shelf === 'currentlyReading') {
           updateStateBooks['currentlyReading'].push(book);
-          console.log(book)
         }
         else if (book.shelf === 'wantToRead') {
           updateStateBooks['wantToRead'].push(book);
@@ -114,10 +113,10 @@ class BooksApp extends React.Component {
     })
   }
 
-  disableOptions = (book, currentShelfValue) => {
+  disableOptions = (book) => {
     let optionSelected = document.getElementById('book'+ book.id).getElementsByTagName('option');
     for (var i=0; i<optionSelected.length; i++) {
-      if(optionSelected[i].value === currentShelfValue) {
+      if(optionSelected[i].value === book.shelf) {
         optionSelected[i].disabled = true;
       }
     }

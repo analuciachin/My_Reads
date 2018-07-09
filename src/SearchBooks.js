@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
-//import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-//import escapeRegExp from 'escape-string-regexp'
-//import sortBy from 'sort-by'
 import ListBooks from './ListBooks'
 import * as BooksAPI from './BooksAPI'
 
@@ -40,42 +37,34 @@ class SearchBooks extends Component {
   	}
 
   	disableOptions = (book) => {
-  		let bookTitle = [];
+  		let bookId = [];
   		let bookShelf = [];
   		let optionSelected = document.getElementById('book'+ book.id).getElementsByTagName('option');
   		
   		BooksAPI.getAll().then((books) => { 
   			books.map((book) => {
-  				bookTitle.push(book.title);
+  				bookId.push(book.id);
   				bookShelf.push(book.shelf)
   			})
   		})
   		BooksAPI.search(this.state.query).then((books) => { 
-  			books.map((book) => {
-  				for(var i=0; i<bookTitle.length; i++) {
-  					console.log(book.title);
-  					console.log(bookTitle[i]);
-  					console.log(bookTitle);
-  					if(book.title === bookTitle[i]) {
+  			for(var x=0; x<books.length; x++) {
+  				for (var i=0; i< bookId.length; i++) {
+  					if (bookId[i] === book.id) {
+  						console.log(i);
   						for (var j=0; j<optionSelected.length; j++) {
-  							if(optionSelected[j].value === bookShelf[i]) {
+      						if (optionSelected[j].value === bookShelf[i]) {
         						optionSelected[j].disabled = true;
       						}
-  						}
+    					}
   					}
-  				}	
-  			})
+  				}
+  			}
   		})
   	}
 
 
 	render() {
-
-		{/*
-		if (this.state.query) {
-			BooksAPI.search(this.state.query).then((books) => { this.setState( {none: books} ); console.log(books) })
-		}
-		*/}
 
 		return (
 			<div>
