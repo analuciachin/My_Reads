@@ -13,30 +13,30 @@ class SearchBooks extends Component {
 
 	updateQuery = (query) => {
 		this.setState({ query: query.trim() })
-		if (this.state.query) {
-			BooksAPI.search(this.state.query).then((books) => { this.setState( {none: books} ) })
+		console.log(query)
+		console.log(this.state.query)
+		let empty = []
+		if (query) {
+			BooksAPI.search(query).then((books) => { if(Array.isArray(books)) this.setState( {none: books} ) })
+		}
+		else {			
+			this.setState( {none: empty} )
 		}
 	}
 
 
-  	changeShelves = (book, currentShelfValue) => {
+  	changeShelves = (book) => {
     	this.setState((state) => {
-      		//let shelfFrom = currentShelfValue;
-      
+      		
       		let selectedShelf = document.getElementById('book'+ book.id);
       		let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
 
-      		//let updatedState = {};
-      		//updatedState[shelfFrom] = state[shelfFrom].filter(b => book.id !== b.id);
-      		//updatedState[shelfTo] = state[shelfTo].concat(book); 
-      
       		BooksAPI.update(book, shelfTo);
-      		//console.log(book)
-      		//return updatedState;
+    	
     	})
   	}
 
-  	disableOptions = (book) => {
+  	disableCurrentShelfOption = (book) => {
   		let bookId = [];
   		let bookShelf = [];
   		let optionSelected = document.getElementById('book'+ book.id).getElementsByTagName('option');
@@ -51,10 +51,11 @@ class SearchBooks extends Component {
   			for(var x=0; x<books.length; x++) {
   				for (var i=0; i< bookId.length; i++) {
   					if (bookId[i] === book.id) {
-  						console.log(i);
+  						//console.log(i);
   						for (var j=0; j<optionSelected.length; j++) {
       						if (optionSelected[j].value === bookShelf[i]) {
         						optionSelected[j].disabled = true;
+        						optionSelected[0].selected = true;
       						}
     					}
   					}
@@ -86,7 +87,7 @@ class SearchBooks extends Component {
             		<div className="search-books-results">              			
             		</div>
           		</div>
-				<ListBooks onDisable={this.disableOptions} onChangeShelves={this.changeShelves} books={this.state.none} currentShelf="none" />
+				<ListBooks onDisableShelfOption={this.disableCurrentShelfOption} onChangeShelves={this.changeShelves} books={this.state.none} currentShelf="none" />
 			</div>
 
 		)

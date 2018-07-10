@@ -95,29 +95,31 @@ class BooksApp extends React.Component {
     })
   }
 
-  changeShelves = (book, currentShelfValue) => {
+  changeShelves = (book) => {
+
     this.setState((state) => {
-      let shelfFrom = currentShelfValue;
+      let shelfFrom = book.shelf;
       
       let selectedShelf = document.getElementById('book'+ book.id);
       let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
 
       let updatedState = {};
       updatedState[shelfFrom] = state[shelfFrom].filter(b => book.id !== b.id);
-      updatedState[shelfTo] = state[shelfTo].concat(book); 
-      
-      BooksAPI.update(book, shelfTo);
+      updatedState[shelfTo] = state[shelfTo].concat(book);
+
+      BooksAPI.update(book, shelfTo).then(book.shelf=shelfTo);
 
       return updatedState;
 
     })
   }
 
-  disableOptions = (book) => {
+  disableCurrentShelfOption = (book) => {
     let optionSelected = document.getElementById('book'+ book.id).getElementsByTagName('option');
     for (var i=0; i<optionSelected.length; i++) {
       if(optionSelected[i].value === book.shelf) {
         optionSelected[i].disabled = true;
+        optionSelected[0].selected = true;
       }
     }
   }
@@ -128,9 +130,9 @@ class BooksApp extends React.Component {
         <Route exact path="/" render={() => (
           <div>  
             <MyReadsHeader />
-            <ListBooks onDisable={this.disableOptions} onChangeShelves={this.changeShelves} books={this.state.currentlyReading} currentShelf="currentlyReading" currentShelfTitle="Currently Reading" />
-            <ListBooks onDisable={this.disableOptions} onChangeShelves={this.changeShelves} books={this.state.wantToRead} currentShelf="wantToRead" currentShelfTitle="Want to Read" />
-            <ListBooks onDisable={this.disableOptions} onChangeShelves={this.changeShelves} books={this.state.read} currentShelf="read" currentShelfTitle="Read" />
+            <ListBooks onDisableShelfOption={this.disableCurrentShelfOption} onChangeShelves={this.changeShelves} books={this.state.currentlyReading} currentShelfTitle="Currently Reading" />
+            <ListBooks onDisableShelfOption={this.disableCurrentShelfOption} onChangeShelves={this.changeShelves} books={this.state.wantToRead} currentShelfTitle="Want to Read" />
+            <ListBooks onDisableShelfOption={this.disableCurrentShelfOption} onChangeShelves={this.changeShelves} books={this.state.read} currentShelfTitle="Read" />
           </div>
         )} />
         
