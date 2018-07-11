@@ -13,17 +13,25 @@ class SearchBooks extends Component {
 
 	updateQuery = (query) => {
 		this.setState({ query: query.trim() })
-		console.log(query)
-		console.log(this.state.query)
+		
 		let empty = []
 		if (query) {
-			BooksAPI.search(query).then((books) => { if(Array.isArray(books)) this.setState( {none: books} ) })
+			BooksAPI.search(query).then((books) => {
+				if(Array.isArray(books)) {
+					books.map((book) => {
+  						if( !book.imageLinks ) {
+  							book.imageLinks = {};
+  							book.imageLinks.smallThumbnail = '';
+  						}
+  					})
+  					this.setState({ none: books} )					
+				}
+			})
 		}
 		else {			
 			this.setState( {none: empty} )
 		}
 	}
-
 
   	changeShelves = (book) => {
     	this.setState((state) => {
@@ -31,7 +39,7 @@ class SearchBooks extends Component {
       		let selectedShelf = document.getElementById('book'+ book.id);
       		let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
 
-      		BooksAPI.update(book, shelfTo);
+      		BooksAPI.update(book, shelfTo).then(book.shelf=shelfTo);
     	
     	})
   	}
