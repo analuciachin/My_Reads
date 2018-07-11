@@ -9,7 +9,9 @@ class MyReadsHeader extends Component {
 				<div className="list-books-title">
       				<h1>My Reads</h1>
       			</div>
-      			<Link to="/search">Search Books</Link>
+      			<div className="open-search">
+      				<Link to="/search"></Link>
+      			</div>
     		</div>
 		)
 	}
