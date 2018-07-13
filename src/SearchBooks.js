@@ -6,10 +6,25 @@ import * as BooksAPI from './BooksAPI'
 
 class SearchBooks extends Component {
 
+	constructor(props) {
+		super(props);
+		this.bookId = [];
+  		this.bookShelf = [];
+
+  		
+  		BooksAPI.getAll().then((books) => { 
+  			books.map((book) => {
+  				this.bookId.push(book.id);
+  				this.bookShelf.push(book.shelf)
+  			})
+  		})
+	}
+
 	state = {
 		query: '',
 		none: []
 	}
+
 
 	updateQuery = (query) => {
 		this.setState({ query: query.trim() })
@@ -33,42 +48,34 @@ class SearchBooks extends Component {
 		}
 	}
 
-  	changeShelves = (book) => {
-    	this.setState((state) => {
+  	changeShelves = (book) => {    	
       		
       		let selectedShelf = document.getElementById('book'+ book.id);
       		let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
 
-      		BooksAPI.update(book, shelfTo).then(book.shelf=shelfTo);
-    	
-    	})
+      		BooksAPI.update(book, shelfTo).then((response) => {
+      			console.log(response);
+      			this.bookId.push(book.id)
+      			this.bookShelf.push(shelfTo)
+      		})    	
   	}
 
   	disableCurrentShelfOption = (book) => {
-  		let bookId = [];
-  		let bookShelf = [];
   		let optionSelected = document.getElementById('book'+ book.id).getElementsByTagName('option');
-  		
-  		BooksAPI.getAll().then((books) => { 
-  			books.map((book) => {
-  				bookId.push(book.id);
-  				bookShelf.push(book.shelf)
-  			})
-  		})
+  						
   		BooksAPI.search(this.state.query).then((books) => { 
-  			for(var x=0; x<books.length; x++) {
-  				for (var i=0; i< bookId.length; i++) {
-  					if (bookId[i] === book.id) {
-  						//console.log(i);
+  				for (var i=0; i< this.bookId.length; i++) {
+  					if (this.bookId[i] === book.id) {
   						for (var j=0; j<optionSelected.length; j++) {
-      						if (optionSelected[j].value === bookShelf[i]) {
+      						if (optionSelected[j].value === this.bookShelf[i]) {
+      							console.log(j)
         						optionSelected[j].disabled = true;
         						optionSelected[0].selected = true;
       						}
     					}
   					}
   				}
-  			}
+  			
   		})
   	}
 
