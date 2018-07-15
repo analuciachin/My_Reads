@@ -20,10 +20,10 @@ class ListBooks extends Component {
 										<div className='book-shelf-changer'>
 	                      					<select id={'book' + book.id} onClick={() => this.props.onDisableShelfOption(book)} onChange={() => this.props.onChangeShelves(book)}>
 	                                			<option value='none'>Move to...</option>		                                			
-	                                			<option value='currentlyReading'>Currently Reading</option>
-	                                			<option value='wantToRead'>Want to Read</option>
-	                                			<option value='read'>Read</option>
-	                                			<option value='none'>None</option>
+	                                			<option value='currentlyReading' disabled={book.shelf === 'currentlyReading'}>Currently Reading</option>
+	                                			<option value='wantToRead' disabled={book.shelf === 'wantToRead'}>Want to Read</option>
+	                                			<option value='read' disabled={book.shelf === 'read'}>Read</option>
+	                                			<option value='none' disabled={book.shelf === 'none'}>None</option>
 	                            			</select>
 	                    				</div> {/*div book-shelf-changer*/}
 									</div> {/*book-top*/}

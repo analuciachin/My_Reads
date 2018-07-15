@@ -10,6 +10,11 @@ class SearchBooks extends Component {
 		super(props);
 		this.bookId = [];
   		this.bookShelf = [];
+  		this.upsertShelfProperty = this.upsertShelfProperty.bind(this);
+  		this.state  = {
+			query: '',
+			none: []
+		}
 
   		
   		BooksAPI.getAll().then((books) => { 
@@ -20,11 +25,16 @@ class SearchBooks extends Component {
   		})
 	}
 
-	state = {
-		query: '',
-		none: []
+	// add shelf property to the books in the search section
+	upsertShelfProperty(book)  {
+		this.bookId.map((bookIdOnShelf, index) => {
+			if (bookIdOnShelf === book.id) {
+				book.shelf = this.bookShelf[index];
+			} else {
+				book.shelf = 'none';
+			}
+		})
 	}
-
 
 	updateQuery = (query) => {
 		this.setState({ query: query.trim() })
@@ -32,19 +42,21 @@ class SearchBooks extends Component {
 		let empty = []
 		if (query) {
 			BooksAPI.search(query).then((books) => {
-				if(Array.isArray(books)) {
+				if(Array.isArray(books)) {  //handled invalid queries
 					books.map((book) => {
+						this.upsertShelfProperty(book);  //handled books without smallThumbnail
   						if( !book.imageLinks ) {
   							book.imageLinks = {};
-  							book.imageLinks.smallThumbnail = '';
+  							book.imageLinks.smallThumbnail = '';						
   						}
   					})
+
   					this.setState({ none: books} )					
 				}
 			})
 		}
 		else {			
-			this.setState( {none: empty} )
+			this.setState( {none: empty} )  //search results are not shown when all the text is deleted
 		}
 	}
 
@@ -54,29 +66,38 @@ class SearchBooks extends Component {
       		let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
 
       		BooksAPI.update(book, shelfTo).then((response) => {
-      			console.log(response);
-      			this.bookId.push(book.id)
-      			this.bookShelf.push(shelfTo)
+      			//console.log(response);
+      			this.bookId.push(book.id);
+      			this.bookShelf.push(shelfTo);
+      			let noneCopy = this.state.none.map((bookFromQuery) => {
+      				if (bookFromQuery.id === book.id) {
+      					//console.log(bookFromQuery);
+      					bookFromQuery.shelf = shelfTo; 
+      				}
+      				return bookFromQuery;
+      			});
+      			//console.log(noneCopy);
+      			this.setState({none: noneCopy});
+
+
       		})    	
   	}
 
   	disableCurrentShelfOption = (book) => {
   		let optionSelected = document.getElementById('book'+ book.id).getElementsByTagName('option');
-  						
-  		BooksAPI.search(this.state.query).then((books) => { 
-  				for (var i=0; i< this.bookId.length; i++) {
-  					if (this.bookId[i] === book.id) {
-  						for (var j=0; j<optionSelected.length; j++) {
-      						if (optionSelected[j].value === this.bookShelf[i]) {
-      							console.log(j)
-        						optionSelected[j].disabled = true;
-        						optionSelected[0].selected = true;
-      						}
-    					}
-  					}
-  				}
-  			
-  		})
+  		//console.log(book);				
+  		
+		for (var i=0; i< this.bookId.length; i++) {
+			if (this.bookId[i] === book.id) {
+				for (var j=0; j<optionSelected.length; j++) {
+					if (optionSelected[j].value === this.bookShelf[i]) {
+						console.log(j)
+						optionSelected[j].disabled = true;
+						optionSelected[0].selected = true;
+					}
+				}
+			}
+		}
   	}
 
 
