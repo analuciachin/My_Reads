@@ -16,13 +16,19 @@ class SearchBooks extends Component {
 			none: []
 		}
 
+		this.props.booksOnShelf.map((book) => {
+			this.bookId.push(book.id);
+  			this.bookShelf.push(book.shelf)
+		})
   		
+  		/*
   		BooksAPI.getAll().then((books) => { 
   			books.map((book) => {
   				this.bookId.push(book.id);
-  				this.bookShelf.push(book.shelf)
+  				this.bookShelf.push(book.shelf)	
   			})
   		})
+		*/
 	}
 
 	// add shelf property to the books in the search section
@@ -60,7 +66,7 @@ class SearchBooks extends Component {
 		}
 	}
 
-  	changeShelves = (book) => {    	
+  	moveToShelf = (book) => {    	
       		
       		let selectedShelf = document.getElementById('book'+ book.id);
       		let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
@@ -71,14 +77,12 @@ class SearchBooks extends Component {
       			this.bookShelf.push(shelfTo);
       			let noneCopy = this.state.none.map((bookFromQuery) => {
       				if (bookFromQuery.id === book.id) {
-      					//console.log(bookFromQuery);
       					bookFromQuery.shelf = shelfTo; 
       				}
       				return bookFromQuery;
       			});
-      			//console.log(noneCopy);
       			this.setState({none: noneCopy});
-
+      			this.props.onPlaceBook(book);
 
       		})    	
   	}
@@ -123,7 +127,7 @@ class SearchBooks extends Component {
             		<div className="search-books-results">              			
             		</div>
           		</div>
-				<ListBooks onDisableShelfOption={this.disableCurrentShelfOption} onChangeShelves={this.changeShelves} books={this.state.none} currentShelf="none" />
+				<ListBooks onDisableShelfOption={this.disableCurrentShelfOption} onChangeShelves={this.moveToShelf} books={this.state.none} currentShelf="none" />
 			</div>
 
 		)
