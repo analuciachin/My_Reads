@@ -15,20 +15,12 @@ class SearchBooks extends Component {
 			query: '',
 			none: []
 		}
-
+         
 		this.props.booksOnShelf.map((book) => {
 			this.bookId.push(book.id);
   			this.bookShelf.push(book.shelf)
 		})
   		
-  		/*
-  		BooksAPI.getAll().then((books) => { 
-  			books.map((book) => {
-  				this.bookId.push(book.id);
-  				this.bookShelf.push(book.shelf)	
-  			})
-  		})
-		*/
 	}
 
 	// add shelf property to the books in the search section
@@ -70,7 +62,36 @@ class SearchBooks extends Component {
       		
       		let selectedShelf = document.getElementById('book'+ book.id);
       		let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
+      		let count=0;
 
+      		BooksAPI.update(book, shelfTo).then((response) => {
+      			//console.log(response);
+      			for (var i=0; i<this.bookId.length; i++) {
+      				if (this.bookId[i] === book.id) {
+      					this.bookShelf[i] = shelfTo;
+      					count++;
+      				}
+      			}
+
+      			if(count === 0) {
+      				this.bookId.push(book.id);
+      				this.bookShelf.push(shelfTo);
+      			}
+      			//console.log(count);
+      			
+      			let noneCopy = this.state.none.map((bookFromQuery) => {
+      				if (bookFromQuery.id === book.id) {
+    					bookFromQuery.shelf = shelfTo; 
+      				}
+      				return bookFromQuery;
+      			});
+      			//console.log("will set a new state into " +  shelfTo);
+      			this.setState({none: noneCopy});
+      			this.props.onPlaceBook(book);
+
+      		})
+
+      		/*
       		BooksAPI.update(book, shelfTo).then((response) => {
       			//console.log(response);
       			this.bookId.push(book.id);
@@ -84,7 +105,8 @@ class SearchBooks extends Component {
       			this.setState({none: noneCopy});
       			this.props.onPlaceBook(book);
 
-      		})    	
+      		})
+      		*/    	
   	}
 
   	disableCurrentShelfOption = (book) => {
@@ -95,9 +117,12 @@ class SearchBooks extends Component {
 			if (this.bookId[i] === book.id) {
 				for (var j=0; j<optionSelected.length; j++) {
 					if (optionSelected[j].value === this.bookShelf[i]) {
-						console.log(j)
+						//console.log(j)
 						optionSelected[j].disabled = true;
 						optionSelected[0].selected = true;
+					}
+					else {
+						optionSelected[j].disabled = false;
 					}
 				}
 			}
