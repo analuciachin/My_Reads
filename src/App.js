@@ -12,7 +12,8 @@ class BooksApp extends React.Component {
       currentlyReading: [],
       wantToRead: [],
       read: [],
-      none: []
+      none: [],
+      booksOnShelf: []
   }
   
   componentDidMount() {
@@ -24,6 +25,8 @@ class BooksApp extends React.Component {
     }
 
     BooksAPI.getAll().then((books) => {
+      this.setState({ booksOnShelf: books });
+
       books.map((book) => {
         if(book.shelf === 'currentlyReading') {
           updateStateBooks['currentlyReading'].push(book);
