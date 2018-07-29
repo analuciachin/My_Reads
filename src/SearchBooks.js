@@ -71,7 +71,7 @@ class SearchBooks extends Component {
         count++;
       }
     }
-    console.log(book.shelf); 
+    
     if(count === 0) {
       this.bookId.push(book.id);
       this.bookShelf.push(shelfTo);

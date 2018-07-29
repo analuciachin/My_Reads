@@ -63,16 +63,19 @@ class BooksApp extends React.Component {
       updatedState[shelfFrom] = state[shelfFrom].filter(b => book.id !== b.id);
       updatedState[shelfTo] = state[shelfTo].concat(book);
 
-      updatedState['booksOnShelf'] = this.state.booksOnShelf.map((bookShelf) => {
-        if(bookShelf.id === book.id) {
-          bookShelf.shelf = shelfTo;
+      let isBookFoundInShelf = false;
+      updatedState['booksOnShelf'] = this.state.booksOnShelf.map((bookOnShelf) => {
+        if (bookOnShelf.id === book.id) {
+          isBookFoundInShelf = true;
+          bookOnShelf.shelf = shelfTo;
         }
-        return bookShelf;
+        return bookOnShelf;        
       })
-
-      console.log(updatedState);
+      if (!isBookFoundInShelf) {
+        updatedState['booksOnShelf'] = state['booksOnShelf'].concat(book);
+      }
       BooksAPI.update(book, shelfTo).then(book.shelf=shelfTo);
-
+      console.log(updatedState);
       return updatedState;
 
     })
