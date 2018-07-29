@@ -9,28 +9,30 @@ class SearchBooks extends Component {
 	constructor(props) {
 		super(props);
 		this.bookId = [];
-  		this.bookShelf = [];
-  		this.upsertShelfProperty = this.upsertShelfProperty.bind(this);
+  	this.bookShelf = [];
+  	this.upsertShelfProperty = this.upsertShelfProperty.bind(this);
   		this.state  = {
 			query: '',
 			none: []
 		}
-         
+    console.log(this.props.booksOnShelf);   
 		this.props.booksOnShelf.map((book) => {
 			this.bookId.push(book.id);
-  			this.bookShelf.push(book.shelf)
+  		this.bookShelf.push(book.shelf)
 		})
-  		
 	}
 
 	// add shelf property to the books in the search section
 	upsertShelfProperty(book)  {
+    let isBookFoundInShelf = false;
 		this.bookId.map((bookIdOnShelf, index) => {
 			if (bookIdOnShelf === book.id) {
-				book.shelf = this.bookShelf[index];
-			} else {
-				book.shelf = 'none';
+        isBookFoundInShelf = true;
+        book.shelf = this.bookShelf[index];        
+			} else if (!isBookFoundInShelf) {        
+				book.shelf = 'none';       
 			}
+      return book;
 		})
 	}
 
@@ -41,15 +43,15 @@ class SearchBooks extends Component {
 		if (query) {
 			BooksAPI.search(query).then((books) => {
 				if(Array.isArray(books)) {  //handled invalid queries
-					books.map((book) => {
-						this.upsertShelfProperty(book);  //handled books without smallThumbnail
-  						if( !book.imageLinks ) {
-  							book.imageLinks = {};
-  							book.imageLinks.smallThumbnail = '';						
-  						}
-  					})
-
-  					this.setState({ none: books} )					
+					let booksCopy = books.map((book) => {                     
+						this.upsertShelfProperty(book);  //handled books without smallThumbnail            
+						if( !book.imageLinks ) {
+							book.imageLinks = {};
+							book.imageLinks.smallThumbnail = '';
+						}
+            return book;
+					})
+					this.setState({ none: booksCopy} )					
 				}
 			})
 		}
@@ -58,76 +60,51 @@ class SearchBooks extends Component {
 		}
 	}
 
-  	moveToShelf = (book) => {    	
-      		
-      		let selectedShelf = document.getElementById('book'+ book.id);
-      		let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
-      		let count=0;
+	moveToShelf = (book) => {      
+		let selectedShelf = document.getElementById('book'+ book.id);
+		let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
+		let count=0;
 
-      		BooksAPI.update(book, shelfTo).then((response) => {
-      			//console.log(response);
-      			for (var i=0; i<this.bookId.length; i++) {
-      				if (this.bookId[i] === book.id) {
-      					this.bookShelf[i] = shelfTo;
-      					count++;
-      				}
-      			}
+    for (var i=0; i<this.bookId.length; i++) {
+      if (this.bookId[i] === book.id) {
+        this.bookShelf[i] = shelfTo;
+        count++;
+      }
+    }
+    console.log(book.shelf); 
+    if(count === 0) {
+      this.bookId.push(book.id);
+      this.bookShelf.push(shelfTo);
+    }
+	
+  	let noneCopy = this.state.none.map((bookFromQuery) => {
+      let bookFromQueryCopy = {...bookFromQuery};
+  		if (bookFromQuery.id === book.id) {
+  		   bookFromQueryCopy.shelf = shelfTo; 
+  		}
+  		return bookFromQueryCopy;
+  	});
+		this.setState({none: noneCopy});
+    this.props.onChangeShelves(book); 		
+	}
 
-      			if(count === 0) {
-      				this.bookId.push(book.id);
-      				this.bookShelf.push(shelfTo);
-      			}
-      			//console.log(count);
-      			
-      			let noneCopy = this.state.none.map((bookFromQuery) => {
-      				if (bookFromQuery.id === book.id) {
-    					bookFromQuery.shelf = shelfTo; 
-      				}
-      				return bookFromQuery;
-      			});
-      			//console.log("will set a new state into " +  shelfTo);
-      			this.setState({none: noneCopy});
-      			this.props.onPlaceBook(book);
-
-      		})
-
-      		/*
-      		BooksAPI.update(book, shelfTo).then((response) => {
-      			//console.log(response);
-      			this.bookId.push(book.id);
-      			this.bookShelf.push(shelfTo);
-      			let noneCopy = this.state.none.map((bookFromQuery) => {
-      				if (bookFromQuery.id === book.id) {
-      					bookFromQuery.shelf = shelfTo; 
-      				}
-      				return bookFromQuery;
-      			});
-      			this.setState({none: noneCopy});
-      			this.props.onPlaceBook(book);
-
-      		})
-      		*/    	
-  	}
-
-  	disableCurrentShelfOption = (book) => {
-  		let optionSelected = document.getElementById('book'+ book.id).getElementsByTagName('option');
-  		//console.log(book);				
-  		
-		for (var i=0; i< this.bookId.length; i++) {
-			if (this.bookId[i] === book.id) {
-				for (var j=0; j<optionSelected.length; j++) {
-					if (optionSelected[j].value === this.bookShelf[i]) {
-						//console.log(j)
-						optionSelected[j].disabled = true;
-						optionSelected[0].selected = true;
-					}
-					else {
-						optionSelected[j].disabled = false;
-					}
-				}
-			}
-		}
-  	}
+	disableCurrentShelfOption = (book) => {   
+		let optionSelected = document.getElementById('book'+ book.id).getElementsByTagName('option');		
+	  for (var i=0; i< this.bookId.length; i++) {
+		  if (this.bookId[i] === book.id) {
+		    for (var j=0; j<optionSelected.length; j++) {
+			    if (optionSelected[j].value === this.bookShelf[i]) {
+				  //console.log(j)
+					optionSelected[j].disabled = true;
+				 	optionSelected[0].selected = true;
+				  }
+				  else {
+					  optionSelected[j].disabled = false;
+				  }
+			  }
+		  }
+	  }
+	}
 
 
 	render() {

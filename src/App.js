@@ -8,13 +8,18 @@ import SearchBooks from './SearchBooks'
 
 
 class BooksApp extends React.Component {
-  state = {    
+
+  constructor(props) {
+    super(props);
+    this.state = {    
       currentlyReading: [],
       wantToRead: [],
       read: [],
       none: [],
       booksOnShelf: []
+    }
   }
+  
   
   componentDidMount() {
     let updateStateBooks = {
@@ -45,22 +50,33 @@ class BooksApp extends React.Component {
   }
 
   changeShelves = (book) => {
+    let shelfFrom = book.shelf;
+    console.log(shelfFrom);
 
-    this.setState((state) => {
-      let shelfFrom = book.shelf;
+    this.setState((state) => {     
       
       let selectedShelf = document.getElementById('book'+ book.id);
       let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
 
       let updatedState = {};
+
       updatedState[shelfFrom] = state[shelfFrom].filter(b => book.id !== b.id);
       updatedState[shelfTo] = state[shelfTo].concat(book);
 
+      updatedState['booksOnShelf'] = this.state.booksOnShelf.map((bookShelf) => {
+        if(bookShelf.id === book.id) {
+          bookShelf.shelf = shelfTo;
+        }
+        return bookShelf;
+      })
+
+      console.log(updatedState);
       BooksAPI.update(book, shelfTo).then(book.shelf=shelfTo);
 
       return updatedState;
 
     })
+
   }
 
   disableCurrentShelfOption = (book) => {
@@ -87,7 +103,7 @@ class BooksApp extends React.Component {
         
         <Route path="/search" render={() => (
           <div>
-            <SearchBooks booksOnShelf={this.state.booksOnShelf} onPlaceBook={this.changeShelves}/>
+            <SearchBooks booksOnShelf={this.state.booksOnShelf} onChangeShelves={this.changeShelves}/>
           </div>
         )} />
 
