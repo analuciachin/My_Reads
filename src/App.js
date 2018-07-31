@@ -16,7 +16,7 @@ class BooksApp extends React.Component {
       wantToRead: [],
       read: [],
       none: [],
-      booksOnShelf: []
+      booksOnShelf: [] //array with all the books in the shelf to send as a props to search
     }
   }
   
@@ -29,23 +29,23 @@ class BooksApp extends React.Component {
       none: []
     }
 
-    BooksAPI.getAll().then((books) => {
-      this.setState({ booksOnShelf: books });
+  BooksAPI.getAll().then((books) => {
+    this.setState({ booksOnShelf: books });
 
-      books.map((book) => {
-        if(book.shelf === 'currentlyReading') {
-          updateStateBooks['currentlyReading'].push(book);
-        }
-        else if (book.shelf === 'wantToRead') {
-          updateStateBooks['wantToRead'].push(book);
-        }
-        else if (book.shelf === 'read') {
-          updateStateBooks['read'].push(book);
-        }
-      return updateStateBooks;
-      })
+    books.map((book) => {
+      if(book.shelf === 'currentlyReading') {
+        updateStateBooks['currentlyReading'].push(book);
+      }
+      else if (book.shelf === 'wantToRead') {
+        updateStateBooks['wantToRead'].push(book);
+      }
+      else if (book.shelf === 'read') {
+        updateStateBooks['read'].push(book);
+      }
+    return updateStateBooks;
+    })
 
-      this.setState( updateStateBooks );
+    this.setState( updateStateBooks );
     })
   }
 
@@ -63,6 +63,7 @@ class BooksApp extends React.Component {
       updatedState[shelfFrom] = state[shelfFrom].filter(b => book.id !== b.id);
       updatedState[shelfTo] = state[shelfTo].concat(book);
 
+      //if the book is already in a shelf, change the shelf property, otherwise, add book to the booksOnShelf array
       let isBookFoundInShelf = false;
       updatedState['booksOnShelf'] = this.state.booksOnShelf.map((bookOnShelf) => {
         if (bookOnShelf.id === book.id) {
@@ -74,6 +75,7 @@ class BooksApp extends React.Component {
       if (!isBookFoundInShelf) {
         updatedState['booksOnShelf'] = state['booksOnShelf'].concat(book);
       }
+      
       BooksAPI.update(book, shelfTo).then(book.shelf=shelfTo);
       console.log(updatedState);
       return updatedState;

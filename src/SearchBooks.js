@@ -15,14 +15,14 @@ class SearchBooks extends Component {
 			query: '',
 			none: []
 		}
-    console.log(this.props.booksOnShelf);   
+       
 		this.props.booksOnShelf.map((book) => {
 			this.bookId.push(book.id);
   		this.bookShelf.push(book.shelf)
 		})
 	}
 
-	// add shelf property to the books in the search section
+	//add shelf property to the books in the search section
 	upsertShelfProperty(book)  {
     let isBookFoundInShelf = false;
 		this.bookId.map((bookIdOnShelf, index) => {
@@ -44,8 +44,8 @@ class SearchBooks extends Component {
 			BooksAPI.search(query).then((books) => {
 				if(Array.isArray(books)) {  //handled invalid queries
 					let booksCopy = books.map((book) => {                     
-						this.upsertShelfProperty(book);  //handled books without smallThumbnail            
-						if( !book.imageLinks ) {
+						this.upsertShelfProperty(book);              
+						if( !book.imageLinks ) {  //handled books without smallThumbnail
 							book.imageLinks = {};
 							book.imageLinks.smallThumbnail = '';
 						}
@@ -71,21 +71,21 @@ class SearchBooks extends Component {
         count++;
       }
     }
-    
+
     if(count === 0) {
       this.bookId.push(book.id);
       this.bookShelf.push(shelfTo);
     }
 	
   	let noneCopy = this.state.none.map((bookFromQuery) => {
-      let bookFromQueryCopy = {...bookFromQuery};
+      let bookFromQueryCopy = {...bookFromQuery}; //creating a shallow copy of bookFromQuery
   		if (bookFromQuery.id === book.id) {
   		   bookFromQueryCopy.shelf = shelfTo; 
   		}
   		return bookFromQueryCopy;
   	});
 		this.setState({none: noneCopy});
-    this.props.onChangeShelves(book); 		
+    this.props.onChangeShelves(book); //props from the parent (main page)		
 	}
 
 	disableCurrentShelfOption = (book) => {   
@@ -94,7 +94,6 @@ class SearchBooks extends Component {
 		  if (this.bookId[i] === book.id) {
 		    for (var j=0; j<optionSelected.length; j++) {
 			    if (optionSelected[j].value === this.bookShelf[i]) {
-				  //console.log(j)
 					optionSelected[j].disabled = true;
 				 	optionSelected[0].selected = true;
 				  }
