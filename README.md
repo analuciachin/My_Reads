@@ -6,7 +6,7 @@ MyReads is a project from the Front-end Web Development Nanodegree program. We w
 
 The project uses Node.js, if you do not have it installed, you can download it here: [Node.js](https://nodejs.org/en/)
 
-* run `git clone https://github.com/analuciachin/My_Reads.git` to run this repository
+* run `git clone https://github.com/analuciachin/My_Reads.git` to clone this repository
 * go into the application folder and install all project dependencies with `npm install`
 * run the app in the development mode with `npm start`
 
