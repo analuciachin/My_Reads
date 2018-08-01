@@ -13,13 +13,13 @@ The project uses Node.js, if you do not have it installed, you can download it h
 A new browser window should automatically open displaying the app. If it does not, navigate to [http://localhost:3000/](http://localhost:3000/) in your browser.
 
 
-### Resources and Documentation:
+## Resources and Documentation:
 * [Create-react-app Documentation](https://github.com/facebookincubator/create-react-app)
 * [React Router Documentation](http://knowbody.github.io/react-router-docs/)
 * [React Training/React Router](https://reacttraining.com/react-router/web/api/BrowserRouter)
 * [React API](https://facebook.github.io/react/docs/react-api.html)
 
-### Udacity Resources:
+## Udacity Resources:
 * [Project starter template](https://github.com/udacity/reactnd-project-myreads-starter)
 * [Project Rubric](https://review.udacity.com/#!/rubrics/918/view)
 * [Udacity CSS Style Guide](http://udacity.github.io/frontend-nanodegree-styleguide/css.html)
