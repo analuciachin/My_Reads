@@ -9,8 +9,8 @@ class SearchBooks extends Component {
 	constructor(props) {
 		super(props);
 		this.bookId = [];
-  	this.bookShelf = [];
-  	this.upsertShelfProperty = this.upsertShelfProperty.bind(this);
+  		this.bookShelf = [];
+  		this.upsertShelfProperty = this.upsertShelfProperty.bind(this);
   		this.state  = {
 			query: '',
 			none: []
@@ -18,7 +18,7 @@ class SearchBooks extends Component {
        
 		this.props.booksOnShelf.map((book) => {
 			this.bookId.push(book.id);
-  		this.bookShelf.push(book.shelf)
+  			this.bookShelf.push(book.shelf)
 		})
 	}
 
@@ -27,12 +27,12 @@ class SearchBooks extends Component {
     let isBookFoundInShelf = false;
 		this.bookId.map((bookIdOnShelf, index) => {
 			if (bookIdOnShelf === book.id) {
-        isBookFoundInShelf = true;
-        book.shelf = this.bookShelf[index];        
+        		isBookFoundInShelf = true;
+        		book.shelf = this.bookShelf[index];        
 			} else if (!isBookFoundInShelf) {        
 				book.shelf = 'none';       
 			}
-      return book;
+      		return book;
 		})
 	}
 
@@ -49,7 +49,7 @@ class SearchBooks extends Component {
 							book.imageLinks = {};
 							book.imageLinks.smallThumbnail = '';
 						}
-            return book;
+            			return book;
 					})
 					this.setState({ none: booksCopy} )					
 				}
@@ -65,44 +65,44 @@ class SearchBooks extends Component {
 		let shelfTo = selectedShelf.options[selectedShelf.selectedIndex].value;
 		let count=0;
 
-    for (var i=0; i<this.bookId.length; i++) {
-      if (this.bookId[i] === book.id) {
-        this.bookShelf[i] = shelfTo;
-        count++;
-      }
-    }
+	    for (var i=0; i<this.bookId.length; i++) {
+	      if (this.bookId[i] === book.id) {
+	        this.bookShelf[i] = shelfTo;
+	        count++;
+	      }
+	    }
 
-    if(count === 0) {
-      this.bookId.push(book.id);
-      this.bookShelf.push(shelfTo);
-    }
+	    if(count === 0) {
+	      this.bookId.push(book.id);
+	      this.bookShelf.push(shelfTo);
+	    }
 	
-  	let noneCopy = this.state.none.map((bookFromQuery) => {
-      let bookFromQueryCopy = {...bookFromQuery}; //creating a shallow copy of bookFromQuery
+  		let noneCopy = this.state.none.map((bookFromQuery) => {
+      	let bookFromQueryCopy = {...bookFromQuery}; //creating a shallow copy of bookFromQuery
   		if (bookFromQuery.id === book.id) {
   		   bookFromQueryCopy.shelf = shelfTo; 
   		}
   		return bookFromQueryCopy;
-  	});
+  		});
 		this.setState({none: noneCopy});
-    this.props.onChangeShelves(book); //props from the parent (main page)		
+    	this.props.onChangeShelves(book); //props from the parent (main page)		
 	}
 
 	disableCurrentShelfOption = (book) => {   
 		let optionSelected = document.getElementById('book'+ book.id).getElementsByTagName('option');		
-	  for (var i=0; i< this.bookId.length; i++) {
-		  if (this.bookId[i] === book.id) {
-		    for (var j=0; j<optionSelected.length; j++) {
-			    if (optionSelected[j].value === this.bookShelf[i]) {
-					optionSelected[j].disabled = true;
-				 	optionSelected[0].selected = true;
-				  }
-				  else {
-					  optionSelected[j].disabled = false;
-				  }
-			  }
-		  }
-	  }
+	  	for (var i=0; i< this.bookId.length; i++) {
+		  	if (this.bookId[i] === book.id) {
+		    	for (var j=0; j<optionSelected.length; j++) {
+			    	if (optionSelected[j].value === this.bookShelf[i]) {
+						optionSelected[j].disabled = true;
+				 		optionSelected[0].selected = true;
+				  	}
+				  	else {
+					 	optionSelected[j].disabled = false;
+				  	}
+			  	}
+		  	}
+	  	}
 	}
 
 
